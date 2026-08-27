@@ -1,9 +1,4 @@
-# agent-harness CI：fmt / clippy / test / feature 组合矩阵。
-#
-# 注意：markdown-library 等 4 个成员是独立仓库，在本仓库里只是 gitlink 占位
-# （checkout 后为空目录），而根 Cargo.toml 的 [workspace].members 引用了它们，
-# 不补清单的话连 `cargo metadata` 都会失败。因此先注入最小可解析的 manifest，
-# 实际只构建/测试 agent-harness。
+# resolve-tui CI: fmt / clippy / test / feature matrix.
 name: ci
 
 on:
@@ -20,14 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: 为 gitlink 成员补最小 manifest（仅让 workspace 可解析）
-        run: |
-          for d in markdown-library photo-library rag-task-service video-library; do
-            mkdir -p "$d"
-            printf '[package]\nname = "%s"\nversion = "0.0.0"\nedition = "2021"\n' \
-              "$(basename "$d")" > "$d/Cargo.toml"
-          done
+        with:
+          submodules: recursive
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -38,34 +27,28 @@ jobs:
       - name: Format
         run: cargo fmt --all --check
 
-      - name: Clippy（默认 feature，warnings 即失败）
-        run: cargo clippy -p agent-harness --all-targets -- -D warnings
+      - name: Clippy (default features, warnings as errors)
+        run: cargo clippy --all-targets -- -D warnings
 
       - name: Test
-        run: cargo test -p agent-harness
+        run: cargo test
 
   features:
-    name: feature 组合矩阵
+    name: feature matrix
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: 为 gitlink 成员补最小 manifest（仅让 workspace 可解析）
-        run: |
-          for d in markdown-library photo-library rag-task-service video-library; do
-            mkdir -p "$d"
-            printf '[package]\nname = "%s"\nversion = "0.0.0"\nedition = "2021"\n' \
-              "$(basename "$d")" > "$d/Cargo.toml"
-          done
+        with:
+          submodules: recursive
 
       - uses: dtolnay/rust-toolchain@stable
 
       - uses: Swatinem/rust-cache@v2
 
-      - name: Check 四种 feature 组合
+      - name: Check four feature combinations
         run: |
           set -e
-          cargo check -p agent-harness --all-targets
-          cargo check -p agent-harness --all-targets --no-default-features
-          cargo check -p agent-harness --no-default-features --features tui
-          cargo check -p agent-harness --no-default-features --features codegen
+          cargo check --all-targets
+          cargo check --all-targets --no-default-features
+          cargo check --no-default-features --features tui
+          cargo check --no-default-features --features codegen
