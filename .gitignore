@@ -1,0 +1,15 @@
+/target
+/Cargo.lock
+
+# 本地密钥 / 配置（保留 .env.example 作为模板）
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+
+# resolve-tui 运行时会话存档（个人对话数据不入库）
+**/.resolve-tui-sessions/
+# resolve-tui 沙箱工作区（任务产物）
+**/.resolve-tui-sandbox/
