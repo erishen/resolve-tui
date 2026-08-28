@@ -68,7 +68,8 @@ pub(crate) fn remember_at(path: &Path, text: &str) -> Result<(), HarnessError> {
     }
     body.push_str(&format!("- {one_line}\n"));
     if let Some(parent) = path.parent() {
-        std::fs::create_dir_all(parent).map_err(|e| HarnessError::other(format!("创建目录失败: {e}")))?;
+        std::fs::create_dir_all(parent)
+            .map_err(|e| HarnessError::other(format!("创建目录失败: {e}")))?;
     }
     // 长期记忆含个人事实，0600 落盘，避免同机其它用户读取。
     crate::agent::write_private(&path.to_string_lossy(), &body)

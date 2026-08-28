@@ -131,8 +131,7 @@ pub async fn run_tui(
             #[cfg(feature = "codegen")]
             conversation.set_codegen_background(true);
             // 技能与 MCP：启动时一次性加载/连接（失败不阻断）。
-            let (skills, skill_warnings) =
-                crate::skills::load_skills(&crate::skills::skills_dir());
+            let (skills, skill_warnings) = crate::skills::load_skills(&crate::skills::skills_dir());
             conversation.set_skills(skills);
             // 进入 TUI 前收集到的诊断（配置/.env）+ 技能加载告警，统一作为系统消息呈现，
             // 避免直接打 stderr 污染备用屏、退出时又被 LeaveAlternateScreen 闪出来。

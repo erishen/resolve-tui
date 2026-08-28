@@ -5,6 +5,7 @@
 use std::sync::{Arc, Mutex};
 use tokio::sync::mpsc;
 
+use crate::agent::{AgentEvent, Approval};
 use crate::{
     Config, HarnessError,
     agent::Conversation,
@@ -12,7 +13,6 @@ use crate::{
     sandbox::{self, WORKSPACE_RETENTION_SECS},
     skills,
 };
-use crate::agent::{AgentEvent, Approval};
 
 /// 无 TUI 的普通 CLI 路径：把事件渲染到 stdout。
 ///
@@ -87,8 +87,10 @@ pub async fn run(task: &str, config: &Config) -> Result<String, HarnessError> {
         match sandbox::ensure_sandbox_root(&cli_config.sandbox_dir) {
             Ok(()) => {
                 println!("[sandbox] 根目录: {}", cli_config.sandbox_dir.display());
-                let removed =
-                    sandbox::prune_task_workspaces(&cli_config.sandbox_dir, WORKSPACE_RETENTION_SECS);
+                let removed = sandbox::prune_task_workspaces(
+                    &cli_config.sandbox_dir,
+                    WORKSPACE_RETENTION_SECS,
+                );
                 if removed > 0 {
                     println!("[sandbox] 已清理 {removed} 个过期任务工作区");
                 }

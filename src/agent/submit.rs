@@ -7,12 +7,8 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::sync::mpsc;
 
-use crate::{
-    Config, HarnessError,
-    model::InputItem,
-    tools::builtin_tools,
-};
 use crate::agent::{AgentEvent, Approval, Conversation};
+use crate::{Config, HarnessError, model::InputItem, tools::builtin_tools};
 
 impl Conversation {
     /// 提交一条用户任务，驱动 agent 循环直到最终答案或迭代上限。

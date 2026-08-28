@@ -19,8 +19,8 @@ mod event;
 mod helpers;
 mod roles;
 // 提交入口（submit）与 CLI 单次入口（run）拆到独立子模块，保持本文件聚焦对话状态。
-mod submit;
 mod cli;
+mod submit;
 
 // `submit`（本文件）直接按名称访问的辅助函数；其余两个仅测试模块 `agent_tests` 用到，
 // 故用 `#[cfg(test)]` 限定，避免非测试编译下产生未使用导入告警。
@@ -247,7 +247,9 @@ impl Conversation {
         };
         let mut g = m.write().await;
         if !g.detach(name) {
-            return Err(HarnessError::other(format!("未找到已连接的 server：{name}")));
+            return Err(HarnessError::other(format!(
+                "未找到已连接的 server：{name}"
+            )));
         }
         let prefix = format!("mcp_{}", name.replace(['-', '.'], "_"));
         self.extra_tools.retain(|t| !t.name.starts_with(&prefix));
@@ -270,7 +272,6 @@ impl Conversation {
     pub fn skills(&self) -> &[Skill] {
         &self.skills
     }
-
 }
 
 impl Conversation {
@@ -352,7 +353,6 @@ impl Conversation {
         &mut self.input
     }
 }
-
 
 #[cfg(test)]
 #[path = "../agent_tests.rs"]

@@ -90,7 +90,15 @@ mod tests {
 
     #[test]
     fn non_quit_inputs_rejected() {
-        for c in ["", "quit now", "q.py", "question", "/quitx", "explain exit", "/help"] {
+        for c in [
+            "",
+            "quit now",
+            "q.py",
+            "question",
+            "/quitx",
+            "explain exit",
+            "/help",
+        ] {
             assert!(!is_quit_command(c), "{c} 不应被识别为退出命令");
         }
     }

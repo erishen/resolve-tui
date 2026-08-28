@@ -137,9 +137,7 @@ fn collect_docs(
                         path.display()
                     )),
                 },
-                Err(e) => {
-                    warnings.push(format!("[skills] 读取 {} 失败: {e}", path.display()))
-                }
+                Err(e) => warnings.push(format!("[skills] 读取 {} 失败: {e}", path.display())),
             }
         }
     }

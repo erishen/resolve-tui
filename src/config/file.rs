@@ -107,7 +107,8 @@ pub fn remove_mcp_server(path: &Path, name: &str) -> Result<bool, HarnessError> 
         out.push('\n');
     }
     if removed {
-        std::fs::write(path, out).map_err(|e| HarnessError::config(format!("写入 {path:?} 失败: {e}")))?;
+        std::fs::write(path, out)
+            .map_err(|e| HarnessError::config(format!("写入 {path:?} 失败: {e}")))?;
     }
     Ok(removed)
 }

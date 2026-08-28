@@ -9,7 +9,7 @@ use std::sync::Arc;
 
 use serde::Deserialize;
 
-use crate::{mcp::McpServerConfig, sandbox::SandboxPolicy, HarnessError};
+use crate::{HarnessError, mcp::McpServerConfig, sandbox::SandboxPolicy};
 
 mod env;
 mod file;
