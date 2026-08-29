@@ -215,6 +215,7 @@ impl Conversation {
             command: command.to_string(),
             args: args.to_vec(),
             env: Default::default(),
+            call_timeout: Default::default(),
         };
         // 尚无 manager（配置为空）时现场建一个，保证首次 add 也能工作。
         let mgr = match &self.mcp {

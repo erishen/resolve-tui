@@ -31,6 +31,7 @@ fn fake_cfg(dir: &std::path::Path, name: &str, tool: &str) -> McpServerConfig {
         command: "sh".to_string(),
         args: vec![script.to_string_lossy().to_string(), tool.to_string()],
         env: HashMap::new(),
+        call_timeout: std::time::Duration::default(),
     }
 }
 

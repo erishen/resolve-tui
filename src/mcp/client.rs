@@ -1,6 +1,7 @@
 //! `McpClient`：单个 server 的 stdio JSON-RPC 2.0 传输（握手 / 请求 / 通知）。
 
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::time::Duration;
 
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::process::{Child, ChildStdin, ChildStdout};
@@ -14,6 +15,8 @@ use super::{HANDSHAKE_TIMEOUT, McpServerConfig, RemoteTool};
 pub(crate) struct McpClient {
     /// 所属 server 名（attach/detach 按名操作）。
     pub(crate) name: String,
+    /// 单次 tools/call 超时（取自 server 配置，长任务可放大）。
+    pub(crate) call_timeout: Duration,
     _child: Child,
     stdin: AsyncMutex<ChildStdin>,
     reader: AsyncMutex<BufReader<ChildStdout>>,
@@ -47,6 +50,7 @@ impl McpClient {
             .ok_or_else(|| HarnessError::tool("子进程 stdout 不可用"))?;
         let client = Self {
             name: cfg.name.clone(),
+            call_timeout: cfg.call_timeout(),
             _child: child,
             stdin: AsyncMutex::new(stdin),
             reader: AsyncMutex::new(BufReader::new(stdout)),

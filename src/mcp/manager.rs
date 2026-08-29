@@ -6,7 +6,7 @@ use crate::{HarnessError, model::ResponseTool};
 
 use super::client::McpClient;
 use super::protocol::{exposed_name, extract_text, sanitize_name, timeout};
-use super::{CALL_TIMEOUT, McpServerConfig};
+use super::McpServerConfig;
 
 impl Default for super::McpManager {
     fn default() -> Self {
@@ -120,7 +120,7 @@ impl super::McpManager {
                 "tools/call",
                 serde_json::json!({"name": original, "arguments": args}),
             ),
-            CALL_TIMEOUT,
+            client.call_timeout,
         )
         .await?;
         if result.get("isError").and_then(|v| v.as_bool()) == Some(true) {

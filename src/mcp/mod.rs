@@ -19,6 +19,18 @@ pub struct McpServerConfig {
     pub command: String,
     pub args: Vec<String>,
     pub env: HashMap<String, String>,
+    /// 单次 `tools/call` 的超时（长任务 server 可用 `timeout_secs` 单独放大）。
+    pub call_timeout: Duration,
+}
+
+impl McpServerConfig {
+    pub fn call_timeout(&self) -> Duration {
+        if self.call_timeout.is_zero() {
+            CALL_TIMEOUT
+        } else {
+            self.call_timeout
+        }
+    }
 }
 
 /// 握手 / 枚举的超时；工具调用可能较慢，给更长的窗口。
@@ -141,6 +153,7 @@ done
                 tool.to_string(),
             ],
             env: HashMap::new(),
+            call_timeout: Duration::default(),
         }
     }
 

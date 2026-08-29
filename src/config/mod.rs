@@ -107,6 +107,10 @@ struct McpServerToml {
     args: Vec<String>,
     #[serde(default)]
     env: BTreeMap<String, String>,
+    /// 单次 tools/call 超时（秒）；缺省用全局默认（120s）。长任务 server
+    /// （如 pse-review，2-6 分钟）务必指定，否则会被超时打断。
+    #[serde(default)]
+    timeout_secs: Option<u64>,
 }
 
 impl Config {
@@ -297,6 +301,10 @@ impl Config {
                             command: s.command.clone(),
                             args: s.args.clone(),
                             env: s.env.clone().into_iter().collect(),
+                            call_timeout: s
+                                .timeout_secs
+                                .map(std::time::Duration::from_secs)
+                                .unwrap_or_default(),
                         })
                         .collect();
                 }
