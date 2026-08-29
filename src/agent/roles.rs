@@ -303,6 +303,7 @@ async fn planner_drive(
                 ok: true,
                 chars: output.len(),
                 preview: None,
+                content: output.clone(),
             });
             history.push(InputItem::function_call(
                 call.call_id.clone(),

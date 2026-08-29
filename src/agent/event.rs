@@ -23,6 +23,9 @@ pub enum AgentEvent {
         ok: bool,
         chars: usize,
         preview: Option<String>,
+        /// 工具输出正文（已按 MAX_TOOL_CHARS 截断）。UI 在成功时可选展示，
+        /// 便于用户直接看到长任务工具（如 pse-review）的完整产物。
+        content: String,
     },
     /// 推理摘要（reasoning 模型才有）。
     Reasoning(String),

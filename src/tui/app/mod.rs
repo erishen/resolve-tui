@@ -18,6 +18,14 @@ use super::util::{pretty_args, truncate_ellipsis};
 use crate::agent::AgentEvent;
 use crate::model::InputItem;
 
+/// 给多行文本每一行加前缀（用于在 TUI 滚动区粘贴工具输出正文时保持缩进对齐）。
+fn indent_text(text: &str, prefix: &str) -> String {
+    text.lines()
+        .map(|l| format!("{prefix}{l}"))
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
 mod input;
 
 /// 滚动历史上限：超过后裁掉最旧行，防止长时间会话内存无限增长。
@@ -253,7 +261,7 @@ impl App {
                 self.push(Role::ToolCall, format!("→ 调用 {name} ({id})"));
             }
             AgentEvent::ToolResult {
-                ok, chars, preview, ..
+                ok, chars, preview, content, ..
             } => {
                 // 失败时把原因直接亮出来，不用去猜。
                 let suffix = preview
@@ -268,6 +276,15 @@ impl App {
                         chars
                     ),
                 );
+                // 成功时把工具输出正文展示出来（缩进粘贴），便于直接看到长任务
+                // 工具（如 pse-review）的完整产物；失败时错误摘要已由 preview 显示，
+                // 不重复贴原始输出。
+                if ok && !content.trim().is_empty() {
+                    self.push_line(Line::from(Span::styled(
+                        indent_text(&content, "    "),
+                        self.theme.color(Role::ToolResult),
+                    )));
+                }
             }
             AgentEvent::Reasoning(r) => self.reasoning.push(r),
             AgentEvent::Usage {

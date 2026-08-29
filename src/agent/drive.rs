@@ -165,11 +165,26 @@ impl Conversation {
                     }
                 };
                 let chars = output.len();
+                let content = output.clone();
+                // 长任务报告工具（pse-review）的成功结果落盘到任务工作区，方便用户
+                // 留存/打开；其余工具不落盘，避免污染工作目录。
+                if ok && call.name.contains("pse-review")
+                    && let Some(cwd) = self.effective_policy(config).cwd.as_deref()
+                {
+                    let path = cwd.join("weekly_review.md");
+                    if std::fs::write(&path, &content).is_ok() {
+                        let _ = tx.send(AgentEvent::System(format!(
+                            "[pse-review] 周报已保存 → {}",
+                            path.display()
+                        )));
+                    }
+                }
                 let _ = tx.send(AgentEvent::ToolResult {
                     id: call.call_id.clone(),
                     ok,
                     chars,
                     preview,
+                    content,
                 });
                 output
             }
