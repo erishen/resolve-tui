@@ -177,3 +177,6 @@ resolve-tui/
 ## 许可证
 
 MIT
+
+## 相关文章
+- [从 Chat UI 到 Agent Workbench：一个终端编码 agent 的交互层是怎么升级的](https://erishen.cn/resolve_tui/)

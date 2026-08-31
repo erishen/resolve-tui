@@ -174,6 +174,9 @@ resolve-tui/
 └── Cargo.toml
 ```
 
+## Related Articles
+- [From Chat UI to Agent Workbench: How the Interaction Layer of a Terminal Coding Agent Upgraded](https://erishen.cn/resolve_tui-en/)
+
 ## License
 
 MIT
