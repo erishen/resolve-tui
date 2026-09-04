@@ -168,7 +168,8 @@ impl Conversation {
                 let content = output.clone();
                 // 长任务报告工具（pse-review）的成功结果落盘到任务工作区，方便用户
                 // 留存/打开；其余工具不落盘，避免污染工作目录。
-                if ok && call.name.contains("pse-review")
+                if ok
+                    && call.name.contains("pse-review")
                     && let Some(cwd) = self.effective_policy(config).cwd.as_deref()
                 {
                     let path = cwd.join("weekly_review.md");
