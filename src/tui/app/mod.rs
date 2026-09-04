@@ -261,7 +261,11 @@ impl App {
                 self.push(Role::ToolCall, format!("→ 调用 {name} ({id})"));
             }
             AgentEvent::ToolResult {
-                ok, chars, preview, content, ..
+                ok,
+                chars,
+                preview,
+                content,
+                ..
             } => {
                 // 失败时把原因直接亮出来，不用去猜。
                 let suffix = preview

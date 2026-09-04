@@ -4,9 +4,9 @@ use std::collections::HashMap;
 
 use crate::{HarnessError, model::ResponseTool};
 
+use super::McpServerConfig;
 use super::client::McpClient;
 use super::protocol::{exposed_name, extract_text, sanitize_name, timeout};
-use super::McpServerConfig;
 
 impl Default for super::McpManager {
     fn default() -> Self {
